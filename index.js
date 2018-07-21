@@ -40,24 +40,28 @@ function trilat(data, allowedDist) {
     var t = math.matrix(nbPoints,2);//[1:Npnt]'; // independent variable
     var y_data = math.matrix(nbPoints, 1);
 
+    var Xs = [], Ys = [], avgX = 0, avgY = 0;
     for(var i=0;i<nbPoints;i++){
         t[i][0] = data[i][0];
         t[i][1] = data[i][1];
         y_data[i][0] = data[i][2];
+        // Create the arrays here
+        Xs.push(data[i][0]);
+        Ys.push(data[i][1]);
+        avgX += data[i][0];
+        avgY += data[i][1];
     }
+    avgX /= nbPoints;
+    avgY /= nbPoints;
 
     var weight = [1];
     var opts = [ 2, 100, 1e-3, 1e-3, 1e-3, 1e-2, 1e-2, 11, 9, 1 ];
     var consts = [];
     
-    var Xs = [ data[0][0], data[1][0], data[2][0] ];
-    var Ys = [ data[0][1], data[1][1], data[2][1] ];
     var minX = Math.min.apply(Math, Xs);
     var minY = Math.min.apply(Math, Ys);
     var maxX = Math.max.apply(Math, Xs);
     var maxY = Math.max.apply(Math, Ys);
-    var avgX = ( Xs[0] + Xs[1] + Xs[2] ) / 3;
-    var avgY = ( Ys[0] + Ys[1] + Ys[2] ) / 3;
     var ad = allowedDist || 0;
     
     var p_init = math.matrix([[avgX], [avgY]]);
